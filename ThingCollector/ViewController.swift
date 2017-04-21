@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     var things : [Thing] = []
@@ -19,7 +19,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         do {
             things = try context.fetch(Thing.fetchRequest())
             tableView.reloadData()
-            print(things)
         } catch {
             
         }
@@ -37,6 +36,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.imageView?.image = UIImage(data: thing.image as! Data)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let thing = things[indexPath.row]
+        performSegue(withIdentifier: "thingSegue", sender: thing)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nextVC = segue.destination as! ThingViewController
+        nextVC.thing = sender as? Thing
     }
     
     override func viewDidLoad() {
